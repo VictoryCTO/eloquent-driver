@@ -36,12 +36,12 @@ class ServiceProvider extends AddonServiceProvider
     {
         parent::boot();
 
-        $this->mergeConfigFrom($config = __DIR__.'/../config/eloquent-driver.php', 'statamic.eloquent-driver');
+        $this->mergeConfigFrom($config = __DIR__ . '/../config/eloquent-driver.php', 'statamic.eloquent-driver');
 
-        if (! $this->app->runningInConsole()) {
+        if (!$this->app->runningInConsole()) {
             return;
         }
-
+    }
 
     public function register()
     {
@@ -52,24 +52,24 @@ class ServiceProvider extends AddonServiceProvider
         $this->registerStructures();
     }
 
-    public function register()
-    {
-        $this->app->bind('statamic.eloquent.entries.entry', function () {
-            return config('statamic-eloquent-driver.entries.entry');
-        });
-
-        $this->app->bind('statamic.eloquent.entries.model', function () {
-            return config('statamic-eloquent-driver.entries.model');
-        });
-
-        Statamic::repository(EntryRepositoryContract::class, EntryRepository::class);
-
-        $this->app->bind(EntryQueryBuilder::class, function ($app) {
-            return new EntryQueryBuilder(
-                $app['statamic.eloquent.entries.model']::query()
-            );
-        });
-    }
+//    public function register()
+//    {
+//        $this->app->bind('statamic.eloquent.entries.entry', function () {
+//            return config('statamic-eloquent-driver.entries.entry');
+//        });
+//
+//        $this->app->bind('statamic.eloquent.entries.model', function () {
+//            return config('statamic-eloquent-driver.entries.model');
+//        });
+//
+//        Statamic::repository(EntryRepositoryContract::class, EntryRepository::class);
+//
+//        $this->app->bind(EntryQueryBuilder::class, function ($app) {
+//            return new EntryQueryBuilder(
+//                $app['statamic.eloquent.entries.model']::query()
+//            );
+//        });
+//    }
 
 
     protected function registerCollections()
