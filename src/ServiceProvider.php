@@ -41,6 +41,29 @@ class ServiceProvider extends AddonServiceProvider
         if (!$this->app->runningInConsole()) {
             return;
         }
+
+        $this->publishes([
+            $config => config_path('statamic/eloquent-driver.php'),
+        ], 'statamic-eloquent-config');
+
+        $this->publishes([
+            __DIR__.'/../database/migrations/create_entries_table.php' => $this->migrationsPath('create_entries_table'),
+        ], 'statamic-eloquent-entries-table');
+
+        $this->publishes([
+            __DIR__.'/../database/migrations/create_entries_table_with_string_ids.php' => $this->migrationsPath('create_entries_table_with_string_ids'),
+        ], 'statamic-eloquent-entries-table-with-string-ids');
+
+        $this->publishes([
+            __DIR__.'/../database/migrations/create_taxonomies_table.php' => $this->migrationsPath('create_taxonomies_table'),
+            __DIR__.'/../database/migrations/create_terms_table.php' => $this->migrationsPath('create_terms_table'),
+            __DIR__.'/../database/migrations/create_globals_table.php' => $this->migrationsPath('create_globals_table'),
+            __DIR__.'/../database/migrations/create_navigations_table.php' => $this->migrationsPath('create_navigations_table'),
+            __DIR__.'/../database/migrations/create_navigation_trees_table.php' => $this->migrationsPath('create_navigation_trees_table'),
+            __DIR__.'/../database/migrations/create_collections_table.php' => $this->migrationsPath('create_collections_table'),
+        ], 'statamic-eloquent-additional-tables');
+
+        $this->commands([ImportEntries::class]);
     }
 
     public function register()
@@ -52,25 +75,25 @@ class ServiceProvider extends AddonServiceProvider
         $this->registerStructures();
     }
 
-//    public function register()
-//    {
-//        $this->app->bind('statamic.eloquent.entries.entry', function () {
-//            return config('statamic-eloquent-driver.entries.entry');
-//        });
-//
-//        $this->app->bind('statamic.eloquent.entries.model', function () {
-//            return config('statamic-eloquent-driver.entries.model');
-//        });
-//
-//        Statamic::repository(EntryRepositoryContract::class, EntryRepository::class);
-//
-//        $this->app->bind(EntryQueryBuilder::class, function ($app) {
-//            return new EntryQueryBuilder(
-//                $app['statamic.eloquent.entries.model']::query()
-//            );
-//        });
-//    }
+    protected function registerEntries()
+    {
+        $this->app->bind('statamic.eloquent.entries.entry', function () {
+            return config('statamic.eloquent-driver.entries.entry');
+        });
 
+        $this->app->bind('statamic.eloquent.entries.model', function () {
+            return config('statamic.eloquent-driver.entries.model');
+        });
+
+        Statamic::repository(EntryRepositoryContract::class, EntryRepository::class);
+        Statamic::repository(CollectionRepositoryContract::class, CollectionRepository::class);
+
+        $this->app->bind(EntryQueryBuilder::class, function ($app) {
+            return new EntryQueryBuilder(
+                $app['statamic.eloquent.entries.model']::query()
+            );
+        });
+    }
 
     protected function registerCollections()
     {
@@ -78,11 +101,11 @@ class ServiceProvider extends AddonServiceProvider
         Statamic::repository(CollectionTreeRepositoryContract::class, CollectionTreeRepository::class);
 
         $this->app->bind('statamic.eloquent.collections.model', function () {
-            return config('statamic-eloquent-driver.collections.model');
+            return config('statamic.eloquent-driver.collections.model');
         });
 
         $this->app->bind('statamic.eloquent.trees.model', function () {
-            return config('statamic-eloquent-driver.trees.model');
+            return config('statamic.eloquent-driver.trees.model');
         });
     }
 
@@ -98,11 +121,11 @@ class ServiceProvider extends AddonServiceProvider
         });
 
         $this->app->bind('statamic.eloquent.terms.model', function () {
-            return config('statamic-eloquent-driver.terms.model');
+            return config('statamic.eloquent-driver.terms.model');
         });
 
         $this->app->bind('statamic.eloquent.taxonomies.model', function () {
-            return config('statamic-eloquent-driver.taxonomies.model');
+            return config('statamic.eloquent-driver.taxonomies.model');
         });
     }
 
@@ -111,11 +134,11 @@ class ServiceProvider extends AddonServiceProvider
         Statamic::repository(GlobalRepositoryContract::class, GlobalRepository::class);
 
         $this->app->bind('statamic.eloquent.global-sets.model', function () {
-            return config('statamic-eloquent-driver.global-sets.model');
+            return config('statamic.eloquent-driver.global-sets.model');
         });
 
-        $this->app->bind('statamic.eloquent.variables.model', function () {
-            return config('statamic-eloquent-driver.variables.model');
+        $this->app->bind('statamic.eloquent.entries.model', function () {
+            return config('statamic.eloquent-driver.entries.model');
         });
     }
 
@@ -125,12 +148,11 @@ class ServiceProvider extends AddonServiceProvider
         Statamic::repository(NavTreeRepositoryContract::class, NavTreeRepository::class);
 
         $this->app->bind('statamic.eloquent.navigations.model', function () {
-            return config('statamic-eloquent-driver.navigations.model');
+            return config('statamic.eloquent-driver.navigations.model');
         });
 
         $this->app->bind('statamic.eloquent.trees.model', function () {
-            return config('statamic-eloquent-driver.trees.model');
-
+            return config('statamic.eloquent-driver.trees.model');
         });
     }
 
