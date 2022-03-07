@@ -137,8 +137,8 @@ class ServiceProvider extends AddonServiceProvider
             return config('statamic.eloquent-driver.global-sets.model');
         });
 
-        $this->app->bind('statamic.eloquent.entries.model', function () {
-            return config('statamic.eloquent-driver.entries.model');
+        $this->app->bind('statamic.eloquent.variables.model', function () {
+            return config('statamic.eloquent-driver.variables.model');
         });
     }
 
