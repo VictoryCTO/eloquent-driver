@@ -3,6 +3,7 @@
 namespace Statamic\Eloquent\Collections;
 
 use Illuminate\Support\Collection as IlluminateCollection;
+use Illuminate\Support\Facades\Cache;
 use Statamic\Contracts\Entries\Collection as CollectionContract;
 use Statamic\Eloquent\Entries\EntryModel;
 use Statamic\Stache\Repositories\CollectionRepository as StacheRepository;
@@ -24,7 +25,9 @@ class CollectionRepository extends StacheRepository
 
     public function all(): IlluminateCollection
     {
-        return $this->transform(CollectionModel::all());
+        return Cache::remember('CollectionRepositoryAll', 300, function() {
+            return $this->transform(CollectionModel::all());
+        });
     }
 
     public function find($handle): ?CollectionContract
@@ -38,7 +41,9 @@ class CollectionRepository extends StacheRepository
 
     public function findByHandle($handle): ?CollectionContract
     {
-        $model = CollectionModel::whereHandle($handle)->first();
+        $model = Cache::remember('CollectionRepository-'.md5($handle), 300, function() use($handle) {
+            return CollectionModel::whereHandle($handle)->first();
+        });
 
         return $model
             ? app(CollectionContract::class)->fromModel($model)

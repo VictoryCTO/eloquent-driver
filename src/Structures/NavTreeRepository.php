@@ -2,6 +2,7 @@
 
 namespace Statamic\Eloquent\Structures;
 
+use Illuminate\Support\Facades\Cache;
 use Statamic\Contracts\Structures\Tree as TreeContract;
 use Statamic\Stache\Repositories\NavTreeRepository as StacheRepository;
 
@@ -9,10 +10,12 @@ class NavTreeRepository extends StacheRepository
 {
     public function find(string $handle, string $site): ?TreeContract
     {
-        $model = TreeModel::whereHandle($handle)
-            ->whereType('navigation')
-            ->where('locale', $site)
-            ->first();
+        $model = Cache::remember('NavTreeRepo-'.md5($handle.$site), 400, function() use($handle, $site){
+            return TreeModel::whereHandle($handle)
+                ->whereType('navigation')
+                ->where('locale', $site)
+                ->first();
+        });
 
         return $model
             ? app(TreeContract::class)->fromModel($model)
