@@ -3,6 +3,7 @@
 namespace Statamic\Eloquent\Structures;
 
 use Illuminate\Support\Collection;
+use Illuminate\Support\Facades\Cache;
 use Statamic\Contracts\Structures\Nav as NavContract;
 use Statamic\Stache\Repositories\NavigationRepository as StacheRepository;
 
@@ -29,7 +30,9 @@ class NavigationRepository extends StacheRepository
 
     public function findByHandle($handle): ?NavContract
     {
-        $model = NavModel::whereHandle($handle)->first();
+        $model = Cache::remember('NavigationRepo-'.md5($handle), 300, function() use($handle) {
+            return NavModel::whereHandle($handle)->first();
+        });
 
         return $model
             ? app(NavContract::class)->fromModel($model)
