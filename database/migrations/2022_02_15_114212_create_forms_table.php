@@ -13,13 +13,15 @@ class CreateFormsTable extends Migration
      */
     public function up()
     {
-        Schema::create(config('statamic.eloquent-driver.table_prefix', '').'forms', function (Blueprint $table) {
-            $table->id();
-            $table->string('handle');
-            $table->string('title');
-            $table->json('settings')->nullable();
-            $table->timestamps();
-        });
+        if(!Schema::hasTable(config('statamic.eloquent-driver.table_prefix', '').'forms')) {
+            Schema::create(config('statamic.eloquent-driver.table_prefix', '').'forms', function (Blueprint $table) {
+                $table->id();
+                $table->string('handle');
+                $table->string('title');
+                $table->json('settings')->nullable();
+                $table->timestamps();
+            });
+        }
     }
 
     /**

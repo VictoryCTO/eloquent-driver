@@ -13,14 +13,16 @@ class CreateAssetContainersTable extends Migration
      */
     public function up()
     {
-        Schema::create(config('statamic.eloquent-driver.table_prefix', '').'asset_containers', function (Blueprint $table) {
-            $table->id();
-            $table->string('handle');
-            $table->string('title');
-            $table->string('disk');
-            $table->json('settings')->nullable();
-            $table->timestamps();
-        });
+        if(!Schema::hasTable(config('statamic.eloquent-driver.table_prefix', '').'asset_containers')) {
+            Schema::create(config('statamic.eloquent-driver.table_prefix', '').'asset_containers', function (Blueprint $table) {
+                $table->id();
+                $table->string('handle');
+                $table->string('title');
+                $table->string('disk');
+                $table->json('settings')->nullable();
+                $table->timestamps();
+            });
+        }
     }
 
     /**

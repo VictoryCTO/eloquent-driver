@@ -13,12 +13,14 @@ class CreateFieldsetsTable extends Migration
      */
     public function up()
     {
-        Schema::create(config('statamic.eloquent-driver.table_prefix', '').'fieldsets', function (Blueprint $table) {
-            $table->id();
-            $table->string('handle');
-            $table->json('data');
-            $table->timestamps();
-        });
+        if(!Schema::hasTable(config('statamic.eloquent-driver.table_prefix', '').'fieldsets')) {
+            Schema::create(config('statamic.eloquent-driver.table_prefix', '').'fieldsets', function (Blueprint $table) {
+                $table->id();
+                $table->string('handle');
+                $table->json('data');
+                $table->timestamps();
+            });
+        }
     }
 
     /**

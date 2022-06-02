@@ -13,13 +13,15 @@ class CreateGlobalsTable extends Migration
      */
     public function up()
     {
-        Schema::create(config('statamic.eloquent-driver.table_prefix', '').'global_sets', function (Blueprint $table) {
-            $table->id();
-            $table->string('handle');
-            $table->string('title');
-            $table->json('localizations');
-            $table->timestamps();
-        });
+        if(!Schema::hasTable(config('statamic.eloquent-driver.table_prefix', '').'global_sets')) {
+            Schema::create(config('statamic.eloquent-driver.table_prefix', '').'global_sets', function (Blueprint $table) {
+                $table->id();
+                $table->string('handle');
+                $table->string('title');
+                $table->json('localizations');
+                $table->timestamps();
+            });
+        }
     }
 
     /**

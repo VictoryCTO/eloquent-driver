@@ -13,12 +13,14 @@ class CreateFormSubmissionsTable extends Migration
      */
     public function up()
     {
-        Schema::create(config('statamic.eloquent-driver.table_prefix', '').'form_submissions', function (Blueprint $table) {
-            $table->id();
-            $table->foreignId('form_id')->constrained(config('statamic.eloquent-driver.table_prefix', '').'forms');
-            $table->json('data')->nullable();
-            $table->timestamps();
-        });
+        if(!Schema::hasTable(config('statamic.eloquent-driver.table_prefix', '').'form_submissions')) {
+            Schema::create(config('statamic.eloquent-driver.table_prefix', '').'form_submissions', function (Blueprint $table) {
+                $table->id();
+                $table->foreignId('form_id')->constrained(config('statamic.eloquent-driver.table_prefix', '').'forms');
+                $table->json('data')->nullable();
+                $table->timestamps();
+            });
+        }
     }
 
     /**

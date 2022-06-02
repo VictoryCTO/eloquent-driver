@@ -13,12 +13,14 @@ class CreateAssetTable extends Migration
      */
     public function up()
     {
-        Schema::create(config('statamic.eloquent-driver.table_prefix', '').'assets_meta', function (Blueprint $table) {
-            $table->id();
-            $table->string('handle');
-            $table->json('data')->nullable();
-            $table->timestamps();
-        });
+        if(!Schema::hasTable(config('statamic.eloquent-driver.table_prefix', '').'assets_meta')) {
+            Schema::create(config('statamic.eloquent-driver.table_prefix', '').'assets_meta', function (Blueprint $table) {
+                $table->id();
+                $table->string('handle');
+                $table->json('data')->nullable();
+                $table->timestamps();
+            });
+        }
     }
 
     /**

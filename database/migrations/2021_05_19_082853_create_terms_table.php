@@ -13,15 +13,17 @@ class CreateTermsTable extends Migration
      */
     public function up()
     {
-        Schema::create(config('statamic.eloquent-driver.table_prefix', '').'taxonomy_terms', function (Blueprint $table) {
-            $table->id();
-            $table->string('site');
-            $table->string('slug');
-            $table->string('uri')->nullable();
-            $table->string('taxonomy');
-            $table->json('data');
-            $table->timestamps();
-        });
+        if(!Schema::hasTable(config('statamic.eloquent-driver.table_prefix', '').'taxonomy_terms')) {
+            Schema::create(config('statamic.eloquent-driver.table_prefix', '').'taxonomy_terms', function (Blueprint $table) {
+                $table->id();
+                $table->string('site');
+                $table->string('slug');
+                $table->string('uri')->nullable();
+                $table->string('taxonomy');
+                $table->json('data');
+                $table->timestamps();
+            });
+        }
     }
 
     /**

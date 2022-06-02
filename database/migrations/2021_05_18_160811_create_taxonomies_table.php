@@ -13,14 +13,16 @@ class CreateTaxonomiesTable extends Migration
      */
     public function up()
     {
-        Schema::create(config('statamic.eloquent-driver.table_prefix', '').'taxonomies', function (Blueprint $table) {
-            $table->increments('id');
-            $table->string('handle');
-            $table->string('title');
-            $table->json('sites')->nullable();
-            $table->json('settings')->nullable();
-            $table->timestamps();
-        });
+        if(!Schema::hasTable(config('statamic.eloquent-driver.table_prefix', '').'taxonomies')) {
+            Schema::create(config('statamic.eloquent-driver.table_prefix', '').'taxonomies', function (Blueprint $table) {
+                $table->increments('id');
+                $table->string('handle');
+                $table->string('title');
+                $table->json('sites')->nullable();
+                $table->json('settings')->nullable();
+                $table->timestamps();
+            });
+        }
     }
 
     /**

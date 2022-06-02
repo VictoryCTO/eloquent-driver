@@ -13,15 +13,17 @@ class CreateNavigationTreesTable extends Migration
      */
     public function up()
     {
-        Schema::create(config('statamic.eloquent-driver.table_prefix', '').'trees', function (Blueprint $table) {
-            $table->id();
-            $table->string('handle');
-            $table->string('type');
-            $table->string('initialPath')->nullable();
-            $table->string('locale')->nullable();
-            $table->json('tree')->nullable();
-            $table->timestamps();
-        });
+        if(!Schema::hasTable(config('statamic.eloquent-driver.table_prefix', '').'trees')) {
+            Schema::create(config('statamic.eloquent-driver.table_prefix', '').'trees', function (Blueprint $table) {
+                $table->id();
+                $table->string('handle');
+                $table->string('type');
+                $table->string('initialPath')->nullable();
+                $table->string('locale')->nullable();
+                $table->json('tree')->nullable();
+                $table->timestamps();
+            });
+        }
     }
 
     /**
