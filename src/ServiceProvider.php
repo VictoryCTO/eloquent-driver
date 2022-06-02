@@ -63,15 +63,6 @@ class ServiceProvider extends AddonServiceProvider
             __DIR__.'/../database/publish/create_entries_table_with_string_ids.php' => $this->migrationsPath('create_entries_table_with_string_ids'),
         ], 'statamic-eloquent-entries-table-with-string-ids');
 
-        $this->publishes([
-            __DIR__.'/../database/migrations/create_taxonomies_table.php' => $this->migrationsPath('create_taxonomies_table'),
-            __DIR__.'/../database/migrations/create_terms_table.php' => $this->migrationsPath('create_terms_table'),
-            __DIR__.'/../database/migrations/create_globals_table.php' => $this->migrationsPath('create_globals_table'),
-            __DIR__.'/../database/migrations/create_navigations_table.php' => $this->migrationsPath('create_navigations_table'),
-            __DIR__.'/../database/migrations/create_navigation_trees_table.php' => $this->migrationsPath('create_navigation_trees_table'),
-            __DIR__.'/../database/migrations/create_collections_table.php' => $this->migrationsPath('create_collections_table'),
-        ], 'statamic-eloquent-additional-tables');
-
         $this->commands([
             Commands\ImportAssets::class,
             Commands\ImportBlueprints::class,
